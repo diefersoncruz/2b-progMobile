@@ -1,24 +1,56 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, View, Image, Button, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
 
 export default function App() {
-  const [pokemon, setPokemon] = useState('');
-  const [respostaUsuario, setRespostaUsuario] = useState('...');
   var pergunta = "Qual o nome do pokemon?";
+  const [respostaUsuario, setRespostaUsuario] = useState('');
+  const [pokemonImage, setPokemonImage] = useState('');
+  const [pokemonName, setPokemonName] = useState('');
+  const [qtdErros, setErros] = useState(0);
+  const [qtdAcertos, setAcertos] = useState(0);
+  var respostaCorreta;
+  var respostaErrada;
 
-  function pegarImagemPokemon() {
-    fetch("https://pokeapi.co/api/v2/pokemon/")
+  function geraDadosPokemon(pokemonId) {
+    fetch("https://pokeapi.co/api/v2/pokemon/" + pokemonId)
       .then((response) => { return response.json() })
-      .then(json => { setPokemon(json.sprites.front_default) })
+      .then(json => {
+        setPokemonImage(json.sprites.other["official-artwork"].front_default)
+        setPokemonName(json.name)
+      })
   }
+
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  function geraPokemonAleatorio() {
+    let numeroAleatorio = getRandomInt(1, 150)
+    geraDadosPokemon(numeroAleatorio)
+  }
+
+  function validaResposta() {
+    if (respostaUsuario == pokemonName) {
+      setAcertos(qtdAcertos + 1)
+    } else {
+      setErros(qtdErros + 1)
+    }
+    geraPokemonAleatorio()
+  }
+
+  // Adicionando useEffect para executar geraPokemonAleatorio ao carregar a aplicação
+  useEffect(() => {
+    geraPokemonAleatorio();
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Quiz Pokemon</Text>
 
       <Image
-        source={{ uri: pokemon, }}
+        source={{ uri: pokemonImage, }}
         style={styles.image}
       />
 
@@ -30,7 +62,7 @@ export default function App() {
         style={styles.input}
       />
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={validaResposta}>
         <Text style={styles.button}>Responder</Text>
       </TouchableOpacity>
 
@@ -39,13 +71,13 @@ export default function App() {
         <View style={styles.viewCentralizada}>
           <Text style={styles.tituloAcertoEErros}>Erros</Text>
           <View style={styles.erros}>
-            <Text style={viewCentralizada}>1</Text>
+            <Text style={styles.viewCentralizada}>{qtdErros}</Text>
           </View>
         </View>
 
         <View style={styles.viewCentralizada}>
           <Text style={styles.tituloAcertoEErros}>Acertos</Text>
-          <Text style={styles.acertos}>1</Text>
+          <Text style={styles.acertos}>{qtdAcertos}</Text>
         </View>
 
       </View>
