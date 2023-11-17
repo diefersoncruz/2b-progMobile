@@ -8,36 +8,38 @@ export default function App() {
   const [pokemonName, setPokemonName] = useState('');
   const [qtdErros, setErros] = useState(0);
   const [qtdAcertos, setAcertos] = useState(0);
-  var respostaCorreta;
-  var respostaErrada;
 
+  // Função que busca os dados do pokemon a partir do ID enviado por parâmetro
   function geraDadosPokemon(pokemonId) {
     fetch("https://pokeapi.co/api/v2/pokemon/" + pokemonId)
       .then((response) => { return response.json() })
       .then(json => {
-        setPokemonImage(json.sprites.other["official-artwork"].front_default)
-        setPokemonName(json.name)
+        setPokemonImage(json.sprites.other["official-artwork"].front_default) // armazena o endereço da imagem na variável pokemonImage
+        setPokemonName(json.name) // armazena o nome do pokemon na variável pokemonName
       })
   }
 
+  // Gera um número inteiro aleatório dentro de um limite especificado
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
   }
 
+  // Função que gera um pokemon aleatório
   function geraPokemonAleatorio() {
-    let numeroAleatorio = getRandomInt(1, 150)
-    geraDadosPokemon(numeroAleatorio)
+    let numeroAleatorio = getRandomInt(1, 150) // chama a função getRandomInt para gerar um numero aleatório entre 1 e 150
+    geraDadosPokemon(numeroAleatorio) // chama a função gerarDadosPokemon passando o número aleatório gerado na função anterior
   }
 
+  // Função para validar a resposta que o usuário digitou
   function validaResposta() {
-    if (respostaUsuario == pokemonName) {
-      setAcertos(qtdAcertos + 1)
+    if (respostaUsuario == pokemonName) { // compara se o nome do pokemon retornado pela API é igual ao nome digitado pelo usuário
+      setAcertos(qtdAcertos + 1) // incrementa a variável qtdAcertos caso a resposta esteja correta
     } else {
-      setErros(qtdErros + 1)
+      setErros(qtdErros + 1) // incrementa a varáivel qtdErros caso a resposta esteja errada
     }
-    geraPokemonAleatorio()
+    geraPokemonAleatorio() // chama a função geraPokemonAleatorio para gerar um novo pokemon
   }
 
   // Adicionando useEffect para executar geraPokemonAleatorio ao carregar a aplicação
@@ -47,18 +49,18 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Quiz Pokemon</Text>
+      <Text style={styles.title}>Quiz</Text>
 
       <Image
-        source={{ uri: pokemonImage, }}
+        source={{ uri: pokemonImage, }} // passa o conteúdo da variável pokemonImage na propriedade URI
         style={styles.image}
       />
 
       <Text style={styles.input}>{pergunta}</Text>
 
       <TextInput
-        value={respostaUsuario}
-        onChangeText={setRespostaUsuario}
+        value={respostaUsuario} // apresenta na tela o conteúdo da variável respostaUsuario que contem o texto digitado pelo usuário
+        onChangeText={setRespostaUsuario} // armazena o texto digitado pelo usuário na variável respostaUsuario
         style={styles.input}
       />
 
@@ -70,9 +72,7 @@ export default function App() {
 
         <View style={styles.viewCentralizada}>
           <Text style={styles.tituloAcertoEErros}>Erros</Text>
-          <View style={styles.viewCentralizada}>
-            <Text style={styles.erros}>{qtdErros}</Text>
-          </View>
+          <Text style={styles.erros}>{qtdErros}</Text>
         </View>
 
         <View style={styles.viewCentralizada}>
