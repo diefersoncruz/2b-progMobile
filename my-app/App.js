@@ -70,8 +70,8 @@ export default function App() {
 
         <View style={styles.viewCentralizada}>
           <Text style={styles.tituloAcertoEErros}>Erros</Text>
-          <View style={styles.erros}>
-            <Text style={styles.viewCentralizada}>{qtdErros}</Text>
+          <View style={styles.viewCentralizada}>
+            <Text style={styles.erros}>{qtdErros}</Text>
           </View>
         </View>
 
@@ -144,6 +144,10 @@ const styles = StyleSheet.create({
     height: 66,
     justifyContent: 'center',
     alignItems: 'center',
+    textAlign: 'center',
+    fontSize: 24,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
 
   },
   acertos: {
